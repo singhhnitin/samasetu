@@ -1,0 +1,7 @@
+﻿mtenv/
+clips/
+*.wav
+*.mp3
+embedding.json
+__pycache__/
+results.csv
