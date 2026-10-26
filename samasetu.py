@@ -1,4 +1,4 @@
-﻿import asyncio, json, os, queue, base64, threading
+import asyncio, json, os, queue, base64, threading
 import numpy as np
 import sounddevice as sd
 import websockets, requests, torch
@@ -16,8 +16,8 @@ tok = AutoTokenizer.from_pretrained(M, trust_remote_code=True)
 mt = AutoModelForSeq2SeqLM.from_pretrained(M, trust_remote_code=True)
 mt.eval()
 
-def translate(text, tgt="tam_Taml"):
-    b = tok(f"hin_Deva {tgt} {text}", return_tensors="pt")
+def translate(text):
+    b = tok(f"hin_Deva tam_Taml {text}", return_tensors="pt")
     with torch.no_grad():
         o = mt.generate(**b, max_length=128, num_beams=1)
     dev = tok.batch_decode(o, skip_special_tokens=True)[0]
@@ -42,8 +42,7 @@ def speak(text):
             if a:
                 buf.append(base64.b64decode(a))
     if buf:
-        pcm = np.frombuffer(b"".join(buf), dtype=np.int16)
-        sd.play(pcm, OUT_RATE)
+        sd.play(np.frombuffer(b"".join(buf), dtype=np.int16), OUT_RATE)
         sd.wait()
 
 q = queue.Queue()
@@ -51,17 +50,20 @@ def cb(indata, frames, t, status):
     q.put(bytes(indata))
 
 def handle(text):
-    ta = translate(text)
-    print("   ->", ta)
-    speak(ta)
+    try:
+        ta = translate(text)
+        print("   ->", ta)
+        speak(ta)
+    except Exception as e:
+        print("   ! error:", e)
 
-async def main():
+async def session():
     headers = {"x-api-key-id": KEY, "lang_code": "hi-IN",
-               "x-sample-rate": str(RATE), "x-vad-threshold": "0.5",
+               "x-sample-rate": str(RATE), "x-vad-threshold": "0.45", "x-max-speech-s": "30",
                "x-min-silence-ms": "700"}
     async with websockets.connect("wss://api.vachana.ai/stt/v3/stream",
                                   additional_headers=headers) as ws:
-        print("SPEAK HINDI - Ctrl+C to stop")
+        print("[connected]")
 
         async def send():
             with sd.RawInputStream(samplerate=RATE, blocksize=FRAME,
@@ -79,5 +81,16 @@ async def main():
                     threading.Thread(target=handle, args=(d["text"],)).start()
 
         await asyncio.gather(send(), recv())
+
+async def main():
+    print("SPEAK HINDI - Ctrl+C to stop")
+    while True:
+        try:
+            await session()
+        except Exception as e:
+            print("[reconnecting]", type(e).__name__)
+            while not q.empty():
+                q.get()
+            await asyncio.sleep(1)
 
 asyncio.run(main())
