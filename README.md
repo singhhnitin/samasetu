@@ -1,8 +1,22 @@
-﻿# SamaSetu
+<p align="center">
+  <img src="docs/live_screen.png" alt="SamaSetu live screen: Hindi in, Tamil out in the speaker's own voice" width="100%">
+</p>
 
-**Live Hindi-to-Tamil speech translation that speaks back in your own voice. No English in between.**
+<h1 align="center">SamaSetu</h1>
 
-You speak Hindi into the mic. About 1.5 seconds later, the same sentence plays in Tamil, in a cloned version of your voice. It runs on a laptop CPU.
+<p align="center"><b>I don't know a word of Tamil. SamaSetu lets me speak it, in my own voice.</b><br>
+Live Hindi → Tamil speech translation · no English in between · ~1.5 s on a laptop CPU</p>
+
+<p align="center">
+  <img alt="Gnani Prisma v2.5" src="https://img.shields.io/badge/Gnani-Prisma%20v2.5%20%C2%B7%20STT-1a3cff">
+  <img alt="Gnani Timbre v2.5" src="https://img.shields.io/badge/Gnani-Timbre%20v2.5%20%C2%B7%20voice%20clone-1a3cff">
+  <img alt="IndicTrans2" src="https://img.shields.io/badge/AI4Bharat-IndicTrans2-ff7a1a">
+  <img alt="Latency" src="https://img.shields.io/badge/first%20sound-~1.5%20s-12b981">
+</p>
+
+<p align="center">
+  📄 <a href="docs/SamaSetu_Pitch.pdf"><b>One-page solution pitch (PDF)</b></a>
+</p>
 
 Built solo for the **Great Indian AI Internship Challenge 2026** by Gnani AI.
 `#GnaniAI` `#GreatIndianAIInternshipChallenge`
@@ -85,6 +99,7 @@ $env:GNANI_API_KEY="your-key"
 1. Record about 20 seconds of yourself speaking clearly and save it as `ref.mp3`.
 2. Run `python embed.py` once. It writes `embedding.json`, your voice embedding.
 3. Run `python samasetu.py` and speak Hindi.
+4. **Live screen:** in a second terminal run `python -m http.server 8000`, then open **http://localhost:8000/display.html** and press F11. It shows the Hindi, the Tamil, and how fast the Tamil voice started for every sentence.
 
 **Two-way conversation** (run one process per speaker):
 
@@ -103,7 +118,9 @@ Your voice recording and `embedding.json` are in `.gitignore`. They never go int
 
 | File | Purpose |
 | --- | --- |
-| `samasetu.py` | Main live pipeline: mic → Prisma → IndicTrans2 → Timbre → speaker, auto-reconnects |
+| `samasetu.py` | Main live pipeline: mic → Prisma → IndicTrans2 → Timbre → speaker, auto-reconnects, writes `display.json` |
+| `display.html` | Live screen: Hindi, Tamil, per-sentence latency, recent sentences |
+| `docs/SamaSetu_Pitch.pdf` | One-page solution pitch |
 | `twoway.py` | Two-way mode, Hindi ↔ Tamil |
 | `embed.py` | Builds the voice-clone embedding from `ref.mp3` |
 | `batch.py` | Runs the pipeline over `clips/`, writes `results.csv` |

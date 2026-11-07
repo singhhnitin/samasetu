@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SamaSetu — Solution Pitch</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --text:#0b1437; --muted:#5d688c; --blue:#1a3cff; --soft:#eef2ff; --edge:#e4e8f5; --orange:#ff7a1a; --osoft:#fff1e6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 210mm; height: 297mm; }
+  body { font-family: "Inter", system-ui, sans-serif; color: var(--text); font-size: 8.9pt; line-height: 1.38;
+         background: radial-gradient(120mm 90mm at 0 0, #e3e9ff, transparent 70%),
+                     radial-gradient(110mm 80mm at 100% 0, #fde6f0, transparent 70%),
+                     radial-gradient(120mm 90mm at 100% 100%, #ffeadb, transparent 70%), #f8f9fd; }
+  .page { padding: 10mm 12mm 8mm; height: 297mm; display: flex; flex-direction: column; gap: 3mm; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .brand { display: flex; gap: 3.4mm; align-items: center; }
+  .mark { width: 12mm; height: 12mm; border-radius: 3.4mm; background: var(--blue); display: grid; place-items: center; }
+  .mark svg { width: 7.4mm; height: 7.4mm; }
+  h1 { font-size: 23pt; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  h1 span { color: var(--blue); }
+  .tag { font-size: 10.5pt; color: var(--muted); margin-top: 1.4mm; font-weight: 500; }
+  .meta { text-align: right; font-size: 8.4pt; color: var(--muted); line-height: 1.55; }
+  .meta b { color: var(--text); }
+  .pill { display: inline-block; background: var(--blue); color: #fff; font-weight: 700; font-size: 7.6pt;
+          padding: 1.2mm 2.8mm; border-radius: 99px; margin-bottom: 1.5mm; letter-spacing: .02em; white-space: nowrap; }
+
+  .hook { font-size: 12pt; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+  .hook em { font-style: normal; color: var(--blue); }
+
+  .shot { flex: 0 0 auto; border-radius: 3.5mm; overflow: hidden; border: 1px solid var(--edge); box-shadow: 0 3mm 9mm rgba(20,40,120,.10); background:#fff; }
+  .shot img { display: block; width: 100%; height: 58mm; object-fit: cover; object-position: center 45%; }
+  .cap { font-size: 7.6pt; color: var(--muted); margin-top: -2.4mm; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .card { background: #fff; border: 1px solid var(--edge); border-radius: 3mm; padding: 3mm 3.8mm; }
+  h2 { font-size: 8pt; font-weight: 800; letter-spacing: .12em; color: var(--blue); margin-bottom: 1.6mm; }
+  .card p + p { margin-top: 1.4mm; }
+  ul { padding-left: 4mm; } li { margin: .5mm 0; }
+
+  .flow { display: flex; align-items: stretch; gap: 1.8mm; }
+  .step { flex: 1; background: #fff; border: 1px solid var(--edge); border-radius: 3mm; padding: 2.6mm 3mm; text-align: center; }
+  .step .n { font-size: 7.2pt; font-weight: 700; color: var(--muted); letter-spacing: .08em; }
+  .step .t { font-weight: 800; font-size: 9.6pt; margin: .6mm 0; }
+  .step .s { font-size: 7.8pt; color: var(--muted); line-height: 1.3; }
+  .step .ms { display: inline-block; margin-top: 1.2mm; font-weight: 800; font-size: 9pt; color: var(--orange); }
+  .step.g { border-color: var(--blue); background: var(--soft); }
+  .arrow { align-self: center; color: var(--blue); font-weight: 800; font-size: 12pt; }
+  .total { flex: 0 0 26mm; background: var(--blue); color: #fff; border-radius: 3mm; display: grid; place-items: center; text-align: center; padding: 2mm; }
+  .total b { font-size: 17pt; display: block; line-height: 1; }
+  .total span { font-size: 7.4pt; opacity: .9; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8.4pt; }
+  th { text-align: left; font-size: 7.2pt; letter-spacing: .08em; color: var(--muted); font-weight: 700; padding: 0 0 1.2mm; }
+  td { padding: 1.1mm 0; border-top: 1px solid var(--edge); }
+  td.b { font-weight: 800; color: var(--blue); }
+  td.x { color: var(--muted); text-decoration: line-through; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 1.6mm; }
+  .chip { background: var(--soft); color: var(--blue); font-weight: 700; font-size: 7.8pt; padding: 1.2mm 2.6mm; border-radius: 99px; }
+  .chip.o { background: var(--osoft); color: #c2560c; }
+
+  footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 8pt; color: var(--muted);
+           border-top: 1px solid var(--edge); padding-top: 2.6mm; }
+  footer b { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <div class="mark"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><path d="M4 22c4-9 20-9 24 0"/><path d="M9 22v-4M16 22v-6.5M23 22v-4"/><path d="M3 26h26"/></svg></div>
+      <div>
+        <h1>Sama<span>Setu</span></h1>
+        <div class="tag">Live Hindi → Tamil speech translation, in the speaker's own voice</div>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill">Great Indian AI Internship Challenge 2026</span><br>
+      <b>Nitin Singh</b> · solo entry<br>
+      B.Tech CSE, KIIT University, Bhubaneswar<br>
+      github.com/singhhnitin/samasetu
+    </div>
+  </header>
+
+  <div class="hook">I don't know a word of Tamil, yet SamaSetu lets me speak it <em>in my own voice</em>, about 1.5 seconds after I finish a Hindi sentence, with <em>no English in between</em>.</div>
+
+  <div class="shot"><img src="live_screen.png" alt="SamaSetu live screen"></div>
+  <div class="cap">Live screen: Hindi heard by Gnani Prisma (left), Tamil spoken in the cloned voice by Gnani Timbre (right), delay measured per sentence. Sentences from a real test run.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>THE PROBLEM</h2>
+      <p>Millions of Hindi speakers live, work and get treated in Tamil Nadu. At a pharmacy or hospital counter, language becomes a wall.</p>
+      <p>Most tools route through English. Hindi and Tamil are both <b>SOV</b>, English is <b>SVO</b>, so the sentence is reordered twice, and the voice sounds like a machine.</p>
+    </div>
+    <div class="card">
+      <h2>THE SOLUTION</h2>
+      <ul>
+        <li><b>Direct Hindi → Tamil</b>: no English pivot, one word order throughout.</li>
+        <li><b>Your own voice</b>: cloned from a 20-second Hindi sample, speaking Tamil.</li>
+        <li><b>Live</b>: ~1.5 s to first sound, on a laptop CPU.</li>
+        <li><b>Two-way mode</b> for real conversations.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <h2 style="margin-bottom:2mm">HOW IT WORKS</h2>
+    <div class="flow">
+      <div class="step g"><div class="n">01 · HEAR</div><div class="t">Gnani Prisma v2.5</div><div class="s">Realtime streaming speech-to-text over WebSocket</div><div class="ms">~110 ms</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="n">02 · TRANSLATE</div><div class="t">IndicTrans2 320M</div><div class="s">Direct Hindi → Tamil, local CPU, greedy decoding</div><div class="ms">~395 ms</div></div>
+      <div class="arrow">→</div>
+      <div class="step g"><div class="n">03 · SPEAK</div><div class="t">Gnani Timbre v2.5</div><div class="s">Cloned-voice TTS, streamed over SSE, plays from the first chunk</div><div class="ms">~407 ms</div></div>
+      <div class="arrow">=</div>
+      <div class="total"><div><b>~1.5 s</b><span>speech to first<br>translated sound</span></div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>MEASURED, NOT ASSUMED</h2>
+      <table>
+        <tr><th>STAGE</th><th>SLOWER OPTION</th><th>CHOSEN</th></tr>
+        <tr><td>Speech-to-text</td><td class="x">680 ms (upload)</td><td class="b">110 ms (stream)</td></tr>
+        <tr><td>Translation</td><td class="x">1,211 ms (5 beams)</td><td class="b">395 ms (greedy)</td></tr>
+        <tr><td>Voice output</td><td class="x">2,712 ms (full file)</td><td class="b">407 ms (stream)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h2>WHO IT'S FOR</h2>
+      <div class="chips" style="margin-bottom:2mm">
+        <span class="chip">Patients &amp; health workers</span><span class="chip">Migrant workers</span><span class="chip">Shopkeepers</span><span class="chip">Support agents</span>
+      </div>
+      <h2>GNANI AI MODELS USED</h2>
+      <div class="chips">
+        <span class="chip o">Prisma v2.5 · streaming STT</span><span class="chip o">Timbre v2.5 · voice clone</span><span class="chip o">Timbre v2.5 · cloned-voice TTS</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>HONEST LIMITS</h2>
+      <p>Waits for a pause (per sentence). Clear sentences work best; slang can mistranslate. Not yet tested on phone audio.</p>
+    </div>
+    <div class="card">
+      <h2>WHAT'S NEXT</h2>
+      <p>Speak while the person is still talking; more language pairs; <b>IndicSimul</b>, the missing benchmark for live Indic-to-Indic speech translation.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span><b>SamaSetu</b>: "sama" (equal) + "setu" (bridge). Language should be a bridge, not a wall.</span>
+    <span>#GnaniAI #GreatIndianAIInternshipChallenge</span>
+  </footer>
+</div>
+</body>
+</html>
