@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SamaSetu · Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@500;600&family=Noto+Sans+Tamil:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* ---- change the look here ---- */
+  :root {
+    --bg: #07061a;
+    --bg-2: #0e0b2e;
+    --panel: rgba(255,255,255,0.045);
+    --panel-edge: rgba(255,255,255,0.09);
+    --text: #f4f2ff;
+    --muted: #a39fc7;
+    --violet: #7c5cff;
+    --blue: #4f8bff;
+    --pink: #c35cff;
+    --green: #34e3a1;
+    --amber: #ffc25c;
+    --grad: linear-gradient(120deg, var(--blue), var(--violet) 50%, var(--pink));
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(900px 600px at 15% -10%, rgba(79,139,255,0.18), transparent 60%),
+      radial-gradient(900px 700px at 100% 110%, rgba(195,92,255,0.16), transparent 60%),
+      linear-gradient(180deg, var(--bg-2), var(--bg));
+    color: var(--text);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    overflow: hidden;
+  }
+  .app { height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 28px 44px 24px; gap: 22px; }
+
+  /* top bar */
+  header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .mark { width: 46px; height: 46px; border-radius: 14px; background: var(--grad);
+          display: grid; place-items: center; box-shadow: 0 8px 30px rgba(124,92,255,0.45); }
+  .mark svg { width: 28px; height: 28px; }
+  .brand h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .brand p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .chips { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .chip { font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px;
+          background: var(--panel); border: 1px solid var(--panel-edge); color: var(--muted); white-space: nowrap; }
+  .chip b { color: var(--text); font-weight: 700; }
+  .live { color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .live i { width: 9px; height: 9px; border-radius: 50%; background: var(--green);
+            box-shadow: 0 0 0 0 rgba(52,227,161,0.7); animation: ping 1.8s infinite; }
+  .live.off i { background: #ff6b6b; animation: none; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(52,227,161,0.6);} 70% { box-shadow: 0 0 0 10px rgba(52,227,161,0);} 100% { box-shadow: 0 0 0 0 rgba(52,227,161,0);} }
+
+  /* main stage */
+  main { display: grid; grid-template-columns: 1fr auto 1fr; gap: 22px; align-items: stretch; min-height: 0; }
+  .card { position: relative; border-radius: 28px; padding: 30px 34px; background: var(--panel);
+          border: 1px solid var(--panel-edge); backdrop-filter: blur(10px);
+          display: flex; flex-direction: column; min-height: 0; overflow: hidden; transition: border-color .3s, box-shadow .3s; }
+  .card.active { border-color: rgba(124,92,255,0.55); box-shadow: 0 0 0 1px rgba(124,92,255,0.25), 0 20px 60px rgba(124,92,255,0.18); }
+  .label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .lang { display: flex; align-items: baseline; gap: 12px; }
+  .lang span { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; color: var(--muted); }
+  .lang em { font-style: normal; font-size: 22px; font-weight: 600; }
+  .lang .hi { font-family: "Noto Sans Devanagari"; }
+  .lang .ta { font-family: "Noto Sans Tamil"; }
+  .tag { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+         background: rgba(255,255,255,0.06); color: var(--muted); }
+  .tag.voice { background: rgba(124,92,255,0.18); color: #cfc3ff; }
+  .text { flex: 1; display: flex; align-items: center; font-size: clamp(30px, 3.4vw, 54px);
+          line-height: 1.35; font-weight: 600; letter-spacing: -0.005em; overflow-wrap: anywhere; }
+  #hi { font-family: "Noto Sans Devanagari", sans-serif; }
+  #ta { font-family: "Noto Sans Tamil", sans-serif; }
+  #ta .g { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .placeholder { color: rgba(255,255,255,0.22); font-weight: 500; }
+  .text.fade { animation: rise .45s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: none; } }
+
+  .shimmer { display: grid; gap: 14px; width: 100%; }
+  .shimmer i { display: block; height: 22px; border-radius: 12px;
+               background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(124,92,255,0.25), rgba(255,255,255,0.05));
+               background-size: 200% 100%; animation: sh 1.1s linear infinite; }
+  .shimmer i:nth-child(2) { width: 75%; } .shimmer i:nth-child(3) { width: 55%; }
+  @keyframes sh { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+  .metric { margin-top: 16px; display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--muted); min-height: 24px; }
+  .metric b { font-size: 20px; color: var(--green); font-weight: 800; }
+
+  /* middle bridge */
+  .bridge { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 170px; }
+  .orb { width: 128px; height: 128px; border-radius: 50%; position: relative; display: grid; place-items: center;
+         background: radial-gradient(circle at 35% 30%, #a48bff, var(--violet) 45%, #2a1a7a 100%);
+         box-shadow: 0 0 60px rgba(124,92,255,0.55), inset 0 -10px 30px rgba(0,0,0,0.35); }
+  .orb::before, .orb::after { content: ""; position: absolute; inset: -14px; border-radius: 50%;
+         border: 2px solid rgba(124,92,255,0.45); opacity: 0; }
+  .listening .orb::before { animation: ring 2.2s ease-out infinite; }
+  .listening .orb::after  { animation: ring 2.2s ease-out 1.1s infinite; }
+  @keyframes ring { from { transform: scale(0.85); opacity: 0.9; } to { transform: scale(1.45); opacity: 0; } }
+  .translating .orb { animation: spin 1.4s linear infinite; background: conic-gradient(var(--blue), var(--violet), var(--pink), var(--blue)); }
+  .translating .orb > * { animation: spin 1.4s linear infinite reverse; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .bars { display: flex; gap: 6px; align-items: center; height: 46px; }
+  .bars i { width: 7px; height: 12px; border-radius: 6px; background: #fff; opacity: 0.95; }
+  .speaking .bars i { animation: eq .9s ease-in-out infinite; }
+  .bars i:nth-child(2) { animation-delay: .15s !important; } .bars i:nth-child(3) { animation-delay: .3s !important; }
+  .bars i:nth-child(4) { animation-delay: .45s !important; } .bars i:nth-child(5) { animation-delay: .6s !important; }
+  @keyframes eq { 0%,100% { height: 10px; } 50% { height: 44px; } }
+  .state { font-size: 15px; font-weight: 700; text-align: center; }
+  .state small { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-top: 4px; }
+  .direct { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted);
+            padding: 7px 12px; border-radius: 999px; border: 1px dashed rgba(255,255,255,0.18); text-align: center; }
+  .direct s { color: #ff8a8a; text-decoration-thickness: 2px; }
+
+  /* history */
+  footer { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
+  footer h3 { font-size: 12px; letter-spacing: 0.14em; color: var(--muted); font-weight: 700; }
+  .history { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; min-height: 64px; }
+  .h { border-radius: 16px; padding: 12px 16px; background: var(--panel); border: 1px solid var(--panel-edge);
+       font-size: 14px; line-height: 1.45; overflow: hidden; animation: rise .4s ease; }
+  .h .a { font-family: "Noto Sans Devanagari"; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .h .b { font-family: "Noto Sans Tamil"; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .empty { color: rgba(255,255,255,0.25); font-size: 14px; grid-column: 1 / -1; align-self: center; }
+
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .app { height: auto; padding: 20px 16px; }
+    header { flex-direction: column; align-items: flex-start; }
+    .chips { justify-content: flex-start; }
+    main { grid-template-columns: 1fr; }
+    .bridge { width: 100%; flex-direction: row; }
+    .orb { width: 84px; height: 84px; }
+    .card { min-height: 220px; }
+    footer, .history { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app listening" id="app">
+  <header>
+    <div class="brand">
+      <div class="mark">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round">
+          <path d="M4 22c4-9 20-9 24 0"/><path d="M9 22v-4M16 22v-6.5M23 22v-4"/><path d="M3 26h26"/>
+        </svg>
+      </div>
+      <div>
+        <h1>SamaSetu</h1>
+        <p>Live Hindi → Tamil speech translation, in your own voice</p>
+      </div>
+    </div>
+    <div class="chips">
+      <div class="chip">Speech-to-text <b>Gnani Prisma v2.5</b></div>
+      <div class="chip">Voice clone <b>Gnani Timbre v2.5</b></div>
+      <div class="chip">Translation <b>IndicTrans2</b></div>
+      <div class="chip live" id="live"><i></i><span id="liveText">LIVE</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="hiCard">
+      <div class="label">
+        <div class="lang"><span>YOU SAID</span><em class="hi">हिन्दी</em></div>
+        <div class="tag">Hindi · heard by Prisma</div>
+      </div>
+      <div class="text" id="hi"><span class="placeholder">बोलिए… कुछ हिन्दी में कहिए</span></div>
+    </section>
+
+    <div class="bridge">
+      <div class="orb"><div class="bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="state" id="state">Listening<small>speak Hindi</small></div>
+      <div class="direct">HINDI → TAMIL<br><s>ENGLISH</s> skipped</div>
+    </div>
+
+    <section class="card" id="taCard">
+      <div class="label">
+        <div class="lang"><span>IN TAMIL</span><em class="ta">தமிழ்</em></div>
+        <div class="tag voice">🔊 your cloned voice</div>
+      </div>
+      <div class="text" id="ta"><span class="placeholder">தமிழில் உங்கள் குரலில்…</span></div>
+      <div class="metric" id="metric"></div>
+    </section>
+  </main>
+
+  <footer>
+    <h3>RECENT</h3>
+    <div class="history" id="history"><div class="empty">Your translated sentences will appear here.</div></div>
+  </footer>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const app = $("app"), hiEl = $("hi"), taEl = $("ta");
+  let last = "", tStart = null, shownHi = "", shownTa = "", fails = 0;
+  const history = [];
+
+  const STATES = {
+    listening:   ["Listening", "speak Hindi"],
+    translating: ["Translating", "Hindi → Tamil, direct"],
+    speaking:    ["Speaking", "in your own voice"],
+  };
+
+  function esc(s) { return s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+
+  function setText(el, text, ph) {
+    el.classList.remove("fade"); void el.offsetWidth;
+    el.innerHTML = text ? `<span class="g">${esc(text)}</span>` : `<span class="placeholder">${ph}</span>`;
+    if (text) el.classList.add("fade");
+  }
+
+  function addHistory(hi, ta) {
+    if (!hi || !ta) return;
+    if (history.length && history[0].hi === hi && history[0].ta === ta) return;
+    history.unshift({ hi, ta }); history.length = Math.min(history.length, 3);
+    $("history").innerHTML = history.map(h =>
+      `<div class="h"><div class="a">${esc(h.hi)}</div><div class="b">${esc(h.ta)}</div></div>`).join("");
+  }
+
+  function render(d) {
+    const st = STATES[d.state] ? d.state : "listening";
+    app.className = "app " + st;
+    $("state").innerHTML = `${STATES[st][0]}<small>${STATES[st][1]}</small>`;
+    $("hiCard").classList.toggle("active", st === "translating");
+    $("taCard").classList.toggle("active", st === "speaking");
+
+    if (st === "translating") {
+      if (shownTa && shownHi) addHistory(shownHi, shownTa);
+      tStart = d.t || null;
+      if (d.hi !== shownHi) { setText(hiEl, d.hi, ""); shownHi = d.hi; }
+      taEl.innerHTML = '<div class="shimmer"><i></i><i></i><i></i></div>'; shownTa = "";
+      $("metric").innerHTML = "";
+    } else if (st === "speaking") {
+      if (d.hi && d.hi !== shownHi) { setText(hiEl, d.hi, ""); shownHi = d.hi; }
+      if (d.ta !== shownTa) { setText(taEl, d.ta, ""); shownTa = d.ta; }
+      if (tStart && d.t) {
+        const s = (d.t - tStart).toFixed(2);
+        $("metric").innerHTML = `⚡ Tamil voice started <b>${s}s</b> after the Hindi transcript`;
+      }
+    } else if (d.hi && d.ta && d.ta !== shownTa) {
+      setText(hiEl, d.hi, ""); setText(taEl, d.ta, ""); shownHi = d.hi; shownTa = d.ta;
+    }
+  }
+
+  async function poll() {
+    try {
+      const r = await fetch("display.json?" + Date.now(), { cache: "no-store" });
+      const raw = await r.text();
+      fails = 0; $("live").classList.remove("off"); $("liveText").textContent = "LIVE";
+      if (raw && raw !== last) { const d = JSON.parse(raw); last = raw; render(d); }
+    } catch (e) {
+      if (++fails > 20) { $("live").classList.add("off"); $("liveText").textContent = "OFFLINE"; }
+    }
+    setTimeout(poll, 80);
+  }
+  poll();
+</script>
+</body>
+</html>

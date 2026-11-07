@@ -1,4 +1,4 @@
-import asyncio, json, os, queue, base64, threading
+import asyncio, json, os, queue, base64, threading, time
 import numpy as np
 import sounddevice as sd
 import websockets, requests, torch
@@ -14,7 +14,7 @@ def show(state, hi="", ta=""):
     # display.json is read by display.html for the live screen
     try:
         with open("display.json", "w", encoding="utf-8") as f:
-            json.dump({"state": state, "hi": hi, "ta": ta}, f, ensure_ascii=False)
+            json.dump({"state": state, "hi": hi, "ta": ta, "t": time.time()}, f, ensure_ascii=False)
     except Exception:
         pass
 
