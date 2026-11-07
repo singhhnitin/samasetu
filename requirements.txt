@@ -1,0 +1,10 @@
+transformers==4.44.2
+torch
+sentencepiece
+huggingface_hub<0.26
+requests
+soundfile
+numpy
+sounddevice
+websockets
+indic-nlp-library

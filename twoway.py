@@ -1,4 +1,4 @@
-﻿import asyncio, json, os, queue, base64, threading, sys
+import asyncio, json, os, queue, base64, threading, sys
 import numpy as np
 import sounddevice as sd
 import websockets, requests, torch
@@ -36,21 +36,27 @@ def speak(text):
         json={"text": text, "model": "vachana-vc-v1", "speaker_embedding": emb,
               "audio_config": {"sample_rate": OUT_RATE, "encoding": "linear_pcm"}},
         stream=True)
-    buf = []
-    for line in r.iter_lines():
-        if not line:
-            continue
-        s = line.decode("utf-8", "ignore")
-        if s.startswith("data:"):
+    # play each chunk as it arrives, so sound starts at the first chunk
+    # instead of after the whole sentence is synthesised
+    carry = b""
+    with sd.RawOutputStream(samplerate=OUT_RATE, channels=1, dtype="int16") as out:
+        for line in r.iter_lines():
+            if not line:
+                continue
+            s = line.decode("utf-8", "ignore")
+            if not s.startswith("data:"):
+                continue
             try:
                 a = json.loads(s[5:].strip()).get("audio")
             except Exception:
                 continue
-            if a:
-                buf.append(base64.b64decode(a))
-    if buf:
-        sd.play(np.frombuffer(b"".join(buf), dtype=np.int16), OUT_RATE)
-        sd.wait()
+            if not a:
+                continue
+            pcm = carry + base64.b64decode(a)
+            cut = len(pcm) - (len(pcm) % 2)   # keep whole 16-bit samples
+            pcm, carry = pcm[:cut], pcm[cut:]
+            if pcm:
+                out.write(pcm)
 
 q = queue.Queue()
 def cb(indata, frames, t, status):
