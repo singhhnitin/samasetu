@@ -5,21 +5,28 @@
 <h1 align="center">SamaSetu</h1>
 
 <p align="center"><b>I don't know a word of Tamil. SamaSetu lets me speak it, in my own voice.</b><br>
-Live Hindi → Tamil speech translation · no English in between · ~1.5 s on a laptop CPU</p>
+Live Hindi → Tamil speech translation · no English in between · ~2 s on a laptop CPU</p>
 
 <p align="center">
   <img alt="Gnani Prisma v2.5" src="https://img.shields.io/badge/Gnani-Prisma%20v2.5%20%C2%B7%20STT-1a3cff">
   <img alt="Gnani Timbre v2.5" src="https://img.shields.io/badge/Gnani-Timbre%20v2.5%20%C2%B7%20voice%20clone-1a3cff">
   <img alt="IndicTrans2" src="https://img.shields.io/badge/AI4Bharat-IndicTrans2-ff7a1a">
-  <img alt="Latency" src="https://img.shields.io/badge/first%20sound-~1.5%20s-12b981">
+  <img alt="Latency" src="https://img.shields.io/badge/first%20sound-~2%20s-12b981">
 </p>
 
 <p align="center">
-  📄 <a href="docs/SamaSetu_Pitch.pdf"><b>One-page solution pitch (PDF)</b></a>
+  📄 <a href="PITCH.md"><b>One-page solution pitch</b></a> · <a href="docs/SamaSetu_Pitch.pdf">PDF</a>
 </p>
 
 Built solo for the **Great Indian AI Internship Challenge 2026** by Gnani AI.
 `#GnaniAI` `#GreatIndianAIInternshipChallenge`
+
+---
+
+## One-page solution pitch
+
+<p align="center"><a href="docs/SamaSetu_Pitch.pdf"><img src="docs/pitch.png" alt="SamaSetu one-page solution pitch" width="720"></a></p>
+<p align="center"><i>Click the image for the PDF, or read it as text in <a href="PITCH.md">PITCH.md</a>.</i></p>
 
 ---
 
@@ -78,7 +85,7 @@ All numbers are measured on a laptop CPU (Windows 11, Python 3.10), no GPU.
 | Speech-to-text | Prisma realtime WebSocket | ~110 ms per segment | ~680 ms via REST upload |
 | Translation | IndicTrans2, 1 beam | ~395 ms | ~1,211 ms with 5 beams |
 | Speech out | Timbre SSE, first chunk | ~407 ms to first audio | ~2,712 ms waiting for the full file |
-| **End to end** | | **~1.5 s to first sound** | |
+| **End to end** | | **~2 s to first sound** (2.1 s in the recorded demo) | |
 
 Switching speech output from waiting for the full file to streaming SSE chunks cut the wait for the voice from ~2.7 s to ~0.4 s. The scripts used to measure these are `latency.py`, `tts_stream.py` and `speed.py`.
 
